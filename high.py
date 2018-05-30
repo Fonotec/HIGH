@@ -68,7 +68,6 @@ else:
     onsource = np.loadtxt(direct+file1,usecols=1)
     offsource = np.loadtxt(direct+file2,usecols=1)
 
-    print(len(onsource))
 
     try:
         noline = str(input('Omit the central hydrogen line?'))
@@ -96,7 +95,24 @@ else:
             else: 
                 print('Specify a valid input!')
         if option == 1:
-            print('test')
+            smoothingfac = int(input('What is the smoothing factor?'))
+            lensmooth = int(np.floor(len(onsource)/smoothingfac))
+            #print(lensmooth)
+            #print(np.zeros(lensmooth+1))
+            onsourcesmooth = np.zeros(lensmooth+1)
+            offsourcesmooth = np.zeros(lensmooth+1)
+            #onsourcesmooth = np.zeros((lensmooth+1.))
+            #offsourcesmooth = np.zeros((lensmooth+1.))
+            
+            for i in range(lensmooth):
+                onsourcesmooth[i] = np.sum(onsource[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
+                offsourcesmooth[i] = np.sum(offsource[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
+            onsourcesmooth[-1]= np.sum(onsource[-1:-smoothingfac])/smoothingfac
+            offsourcesmooth[-1]= np.sum(offsource[-1:-smoothingfac])/smoothingfac
+            plt.plot(onsourcesmooth/offsourcesmooth)
+            plt.show()
+            
+            
         elif option==2:
             print('test')
         elif option==3:
