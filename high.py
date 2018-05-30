@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 # HI Galaxy Hydrogen detector
 # HIGH
 
-live = True #False 
+live = False 
 obstime = 1/60
 if live:
     totaltime = obstime*60
@@ -51,9 +51,11 @@ if live:
     plt.show()
 
 else:
+    file1 = input('Name of file on source:')
+    file2 = input('Name of file off source:')
     direct = './data/'
-    file1 = 'X_CygA_L_000_u_+0.00_+0.00'
-    file2 = 'X_CygA_L_000_r_+1.00_+0.00'
+    #file1 = 'X_CygA_L_000_u_+0.00_+0.00'
+    #file2 = 'X_CygA_L_000_r_+1.00_+0.00'
 
     freq = np.loadtxt(direct+file1,usecols=0)
     onsource = np.loadtxt(direct+file1,usecols=1)
