@@ -51,8 +51,8 @@ if live:
     plt.show()
 
 else:
-    file1 = input('Name of file on source:')
-    file2 = input('Name of file off source:')
+    file1 = input('Name of file on source: ')
+    file2 = input('Name of file off source: ')
     direct = './data/'
     #file1 = 'X_CygA_L_000_u_+0.00_+0.00'
     #file2 = 'X_CygA_L_000_r_+1.00_+0.00'
