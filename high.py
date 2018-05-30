@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 # HI Galaxy Hydrogen detector
 # HIGH
 
@@ -51,9 +52,15 @@ if live:
     plt.show()
 
 else:
-    file1 = input('Name of file on source: ')
-    file2 = input('Name of file off source: ')
+    print('The after processing pipline of HIGH is started')
     direct = './data/'
+    lsarray = os.listdir(direct)
+    print('Choose an on source and off source file to calculate the spectrum:')
+    for i in range(len(lsarray)):
+        print(lsarray[i])
+    
+    file1 = str(input('Name of file on source: '))
+    file2 = str(input('Name of file off source: '))
     #file1 = 'X_CygA_L_000_u_+0.00_+0.00'
     #file2 = 'X_CygA_L_000_r_+1.00_+0.00'
 
@@ -61,8 +68,43 @@ else:
     onsource = np.loadtxt(direct+file1,usecols=1)
     offsource = np.loadtxt(direct+file2,usecols=1)
 
+    print(len(onsource))
+
+    try:
+        noline = str(input('Omit the central hydrogen line?'))
+    except:
+        noline = 'No'
+
+
     plt.plot(freq,onsource/offsource)
+    if noline!='Yes':
+        plt.axvline(x=1420.405,c='r')
     plt.show()
+
+    while True:
+        print('Do you want to do something else?')
+        print('#'*60)
+        print('1. I want to do a smoothing to the data (e.g. binning)!')
+        print('2. I want to add more datasets of the same type!')
+        print('3. I want to add a weighted average in the plot!')
+        print('4. Nevermind, I want to quit!')
+        print('#'*60)
+        while True: 
+            option = int(input('Which option do you want to do? '))
+            if option == 1 or option==2 or option == 3 or option ==4:
+                break
+            else: 
+                print('Specify a valid input!')
+        if option == 1:
+            print('test')
+        elif option==2:
+            print('test')
+        elif option==3:
+            print('test')
+        elif option==4:
+            print('Thanks for using HIGH! :-)')
+            exit(0)
+
 
 
 
