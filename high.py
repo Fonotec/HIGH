@@ -16,6 +16,25 @@ def askInputFiles():
     file2 = str(input('Name of file off source: '))
     return file1, file2
 
+def smoothingFun(freq,onsource,offsource):
+    smoothingfac = int(input('What is the smoothing factor? '))
+    lensmooth = int(np.floor(len(onsource)/smoothingfac))
+    onsourcesmooth = np.zeros(lensmooth+1)
+    offsourcesmooth = np.zeros(lensmooth+1)
+    freqsmooth = np.zeros(lensmooth+1)
+    #onsourcesmooth = np.zeros((lensmooth+1.))
+    #offsourcesmooth = np.zeros((lensmooth+1.))
+    
+    for i in range(lensmooth):
+        onsourcesmooth[i] = np.sum(onsource[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
+        offsourcesmooth[i] = np.sum(offsource[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
+        freqsmooth[i] =np.sum(freq[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
+    onsourcesmooth[-1]= np.sum(onsource[-1:-smoothingfac])/smoothingfac
+    offsourcesmooth[-1]= np.sum(offsource[-1:-smoothingfac])/smoothingfac   
+    freqsmooth[-1] = np.sum(freq[-1:-smoothingfac])/smoothingfac
+    return freqsmooth, onsourcesmooth, offsourcesmooth
+
+
 live = False 
 obstime = 1/60
 if live:
@@ -58,6 +77,9 @@ if live:
 
     print('Completed observation')
     
+    
+
+    np.savetxt('name.txt',np.transpose([onsource,offsource]))
 
     plt.plot(onsource/offsource)
     plt.show()
@@ -97,28 +119,12 @@ else:
         print('#'*60)
         while True: 
             option = int(input('Which option do you want to do? '))
-            if option == 1 or option==2 or option == 3 or option ==4:
+            if option == 1 or option==2 or option == 3 or option ==0:
                 break
             else: 
                 print('Specify a valid input!')
         if option == 1:
-            smoothingfac = int(input('What is the smoothing factor? '))
-            lensmooth = int(np.floor(len(onsource)/smoothingfac))
-            #print(lensmooth)
-            #print(np.zeros(lensmooth+1))
-            onsourcesmooth = np.zeros(lensmooth+1)
-            offsourcesmooth = np.zeros(lensmooth+1)
-            freqsmooth = np.zeros(lensmooth+1)
-            #onsourcesmooth = np.zeros((lensmooth+1.))
-            #offsourcesmooth = np.zeros((lensmooth+1.))
-            
-            for i in range(lensmooth):
-                onsourcesmooth[i] = np.sum(onsource[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
-                offsourcesmooth[i] = np.sum(offsource[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
-                freqsmooth[i] =np.sum(freq[i*smoothingfac:(i+1)*smoothingfac])/smoothingfac
-            onsourcesmooth[-1]= np.sum(onsource[-1:-smoothingfac])/smoothingfac
-            offsourcesmooth[-1]= np.sum(offsource[-1:-smoothingfac])/smoothingfac   
-            freqsmooth[-1] = np.sum(freq[-1:-smoothingfac])/smoothingfac      
+            freqsmooth, onsourcesmooth, offsourcesmooth = smoothingFun(freq,onsource,offsource)
             plt.plot(freqsmooth,onsourcesmooth/offsourcesmooth)
             if noline!='Yes':
                 plt.axvline(x=1420.405,c='r')
@@ -134,7 +140,7 @@ else:
                 notequal = str(input('Is the integration time different? '))
             except:
                 notequal = 'No' 
-            if notequal == 'No':
+            if notequal == 'No' or notequal == 'N' or notequal == 'n':
                 onsourcenew = (onsource+onsource2)/2
                 offsourcenew = (offsource+offsource2)/2
             else:
@@ -145,6 +151,7 @@ else:
 
             plt.plot(freq,onsourcenew/offsourcenew,label='Combined Measurement')
             plt.plot(freq,onsource/offsource,label='Old Measurement')
+            plt.plot(freq,onsource2/offsource2,label='New Measurement')
             if noline!='Yes':
                 plt.axvline(x=1420.405,c='r')
             plt.legend()
