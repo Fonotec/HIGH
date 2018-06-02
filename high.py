@@ -24,6 +24,9 @@ def askInputFiles(direct):
     return direct+file1, direct+file2
 
 def smoothingFun(freq,onsource,offsource):
+    '''
+    Function that smooths the data linear
+    '''
     smoothingfac = int(input('What is the smoothing factor? '))
     lensmooth = int(np.floor(len(onsource)/smoothingfac))
     onsourcesmooth = np.zeros(lensmooth+1)
@@ -117,6 +120,7 @@ if len(sys.argv) != 3:
         
         np.savetxt('name.txt',np.transpose([onsource,offsource]))
 
+# this else is executed when we had 2 files as argument
 else:
     file1 = str(sys.argv[1])
     file2 = str(sys.argv[2])
